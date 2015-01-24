@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html>
+<head lang="en">
+    <meta charset="UTF-8">
+</head>
+<body>
+    <style>
+        table, th, td {
+            border: 1px solid black;
+        }
+    </style>
+
+    <table id="dataTable">
+        {{for items}}
+            <tr>
+                <td>{{:singer}}</td>
+                <td>{{:band}}</td>
+            </tr>
+        {{/for}}
+    </table>
+
+    <script>
+        window.top.loadData(function(data) {
+           jsreport.reload("#dataTable", data);
+        });
+    </script>
+</body>
+</html>

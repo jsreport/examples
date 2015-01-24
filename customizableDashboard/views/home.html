@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html>
+<head lang="en">
+    <meta charset="UTF-8">
+    <script src="https://code.jquery.com/jquery-1.11.0.min.js"></script>
+    <script src="http://localhost:4000/extension/embedding/public/js/embed.js"></script>
+    <link href="//maxcdn.bootstrapcdn.com/bootstrap/3.3.2/css/bootstrap.min.css" rel="stylesheet">
+</head>
+<body>
+<div class="container">
+    <h1>Home</h1>
+
+    <div class="grid">
+        <div class="row">
+            <div class="col-md-6">
+                <div>
+                    <input type="button" onclick="edit('{{pivotTable.shortid}}')" value="edit"/>
+                </div>
+                <iframe scrolling="no" style="min-height:300px; width:100%" name="{{pivotTable.shortid}}"
+                        frameborder="0"></iframe>
+            </div>
+            <div class="col-md-6">
+                <div>
+                    <input type="button" onclick="edit('{{table.shortid}}')" value="edit"/>
+                </div>
+                <iframe scrolling="no" style="min-height:300px; width:100%" name="{{table.shortid}}"
+                        frameborder="0"></iframe>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-6">
+                <div>
+                    <input type="button" onclick="edit('{{chart.shortid}}')" value="edit"/>
+                </div>
+                <iframe scrolling="no" style="min-height:300px; width:100%" name="{{chart.shortid}}"
+                        frameborder="0"></iframe>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+
+    //submit a fake form into the iframe target
+    function render(url, target) {
+        var form = document.createElement("form");
+        form.action = url;
+        form.target = target
+        document.body.appendChild(form);
+        form.submit();
+    }
+
+    //render all widgets
+    render("widget/pivotTable", "{{pivotTable.shortid}}");
+    render("widget/table", "{{table.shortid}}");
+    render("widget/chart", "{{chart.shortid}}");
+
+    //because the widgets uses `wrapped-html` and `client-html` recipe we can also grab the report template from it's iframes
+    //this approach is important for the pivot table scenario which contains also data pushed into it during rendering
+    function edit(shortid) {
+        var iframe = document.getElementsByName(shortid)[0];
+        jsreport.openEditor(iframe.contentWindow.jsreport.template, {useStandardStorage: true}).on("close", function (template) {
+            window.location.reload();
+        });
+    }
+
+    //this method is used by the "table" widget to get the data
+    //here you should be able to do for example ajax requests from the
+    //logged request to the app server
+    function loadData(cb) {
+        cb({
+            items: [
+                { singer: "John Lennon", band: "The Beatles" },
+                { "singer": "Eddie Vedder", band: "Pearl Jam" },
+                { "singer": "Chris Martin", band: "Coldplay"  }
+            ]
+        });
+    }
+
+</script>
+</body>
+</html>

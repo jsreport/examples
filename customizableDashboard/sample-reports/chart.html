@@ -1,0 +1,20 @@
+<script src="http://code.jquery.com/jquery-1.11.0.min.js"></script>
+<script src="http://code.highcharts.com/highcharts.js"></script>
+
+<div id="container" style="height: 400px"></div>
+
+<script>
+    var mps = {{:~toJSON(#data)}};
+
+    $(function () {
+        $('#container').highcharts({
+            title: {
+                text: 'Provinces shares'
+            },
+            series: [{
+                type: "pie",
+                data: mps.provinces
+            }]
+        });
+    });
+</script>
